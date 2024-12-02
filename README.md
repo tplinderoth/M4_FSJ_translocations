@@ -14,7 +14,7 @@ from genetic data is part of [PopGenomicsTools](https://github.com/tplinderoth/P
 
 ### Data
 
-Whole genome sequence data are available on the Sequence Read Archive under BioProject accession PRJNA1099469.
+Whole genome sequence data are available from the Sequence Read Archive under BioProject accession PRJNA1099469.
 <br>
 
 
