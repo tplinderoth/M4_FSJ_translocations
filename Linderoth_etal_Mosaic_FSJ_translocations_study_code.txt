@@ -6007,8 +6007,8 @@ Classify the frequency of different breeding pair types
 
 # read in data
 # Note that the cr_ancestors_20240602.tsv and cr_ped_20240602.tsv files are deposited to dryad. The CUMULATIVE_NESTING_DATA_FINAL_05122023.tsv data 
-# are in the nest_metadata_20240602.tsv dryad file and also contained in the 'nest' tab of the M4_FSJ_monitoring.xlsx file on dryad.
-nest <- read.csv('/home/tyler/Dropbox/research/jay/mosaic/metadata/20230512_metadata/CUMULATIVE_NESTING_DATA_FINAL_05122023.tsv', head=TRUE, sep="\t")
+# are in the nest_metadata_20241115.tsv dryad file and also contained in the 'nest' tab of the M4_FSJ_monitoring.xlsx file on dryad.
+nest <- read.csv('/home/tyler/Dropbox/research/jay/mosaic/simulations/pedigree_sims/inputs/nest_metadata_20241115.tsv', head=TRUE, sep="\t")
 anc <- read.table('/home/tyler/Dropbox/research/jay/mosaic/simulations/pedigree_sims/inputs/cr_ancestors_20240602.tsv',head=FALSE)
 ped <- read.table('/home/tyler/Dropbox/research/jay/mosaic/simulations/pedigree_sims/inputs/cr_ped_20240602.tsv',head=TRUE)
 
@@ -6028,7 +6028,7 @@ pairdf.anc = pairdf[which(pairdf$male %in% anc$V1 == TRUE & !is.na(pairdf$male_p
 
 # add the total number of fledged offspring by pair
 nest$Number_Fledged[which(nest$Number_Fledged == "FAILED" | nest$Number_Fledged == "ABANDONED")] = 0
-nest$Number_Fledged[which(nest$Number_Fledged == "" | nest$Number_Fledged == "N/A" | nest$Number_Fledged == "UNKNOWN")] = NA
+nest$Number_Fledged[which(nest$Number_Fledged == "" | nest$Number_Fledged == "*" | nest$Number_Fledged == "N/A" | nest$Number_Fledged == "UNKNOWN")] = NA
 nest$Number_Fledged <- as.numeric(nest$Number_Fledged)
 
 pairdf.anc$total_fledged = 0
