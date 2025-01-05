@@ -1,5 +1,5 @@
-Resources for the study "Translocations spur population growth but fail to prevent increased 
-inbreeding and genetic erosion in an imperiled species" by Linderoth *et al*.
+Resources for the study "Translocations spur population growth but fail to prevent genetic 
+erosion in imperiled Florida Scrub-Jays" by Linderoth *et al*. (2025)
 ============================================================================================
 
 ### Code
@@ -8,7 +8,7 @@ Commands and code for the overarching analytical workflow are in [Linderoth_etal
 Scripts and custom programs upon which the workflow depends are in [scripts](./scripts).
 <br>
 
-The relateStats program for calculating expected genetic contributions from pedigrees and the reproductive skew (*K*) statistic 
+The relateStats program for calculating expected genetic contributions from pedigrees and the reproductive skew statistic (*K*) 
 from genetic data is part of [PopGenomicsTools](https://github.com/tplinderoth/PopGenomicsTools).
 <br>
 
