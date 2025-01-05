@@ -1,7 +1,7 @@
 #############################################################################################
-# This document contains code for analyzing data in the Linderoth et al. (2024) study       #
-# titled "Translocations spur population growth but fail to prevent increased inbreeding    #
-# and genetic erosion in an imperiled species".                                             #
+# This document contains code for analyzing data in the Linderoth et al. (2025) study       #
+# titled "Translocations spur population growth but fail to prevent genetic erosion in      #
+# imperiled Florida Scrub-Jays".                                                            #
 #                                                                                           #
 # Author contact: lindero1@msu.edu                                                          #
 #                                                                                           #
@@ -154,7 +154,7 @@ bioclass_col <- function(x = NULL) {
 	return(x)
 }
 
-h_boxplot3 <- function(x=NULL, n=NULL, lev=grplevels, ylabel="Heterozygosity", pntlab=NULL, seed=10287, color=NULL, ylimits=NULL, idlabels=NULL, labpos=NULL) {
+h_boxplot3 <- function(x=NULL, n=NULL, lev=grplevels, ylabel="Heterozygosity", pntlab=NULL, seed=10287, color=NULL, ylimits=NULL, idlabels=NULL, labpos=NULL, breaknames=TRUE) {
         if (length(grep("TeachingDemos",(.packages()))) == 0) library(TeachingDemos) # for shadowtext()
         nlevel = length(lev)
 
@@ -162,7 +162,8 @@ h_boxplot3 <- function(x=NULL, n=NULL, lev=grplevels, ylabel="Heterozygosity", p
         boxplot(x[,n] ~ group, data=x, outline=FALSE, names=c(rep("",nlevel)), xlab="", ylab=ylabel, main="", col="gray80", cex.axis=1.5, cex.lab=1.5, lwd=2, ylim=ylimits)
         #mtext(lev,1,at=1:nlevel, padj=1, cex=1.5)
 	if (is.null(labpos)) labpos=1:nlevel 
-        mtext(c(lev[1:3],paste("Other","M4",sep="\n")), 1,at=labpos, padj=1, cex=1.5)
+	septype = ifelse(breaknames == TRUE,"\n", " ")
+	mtext(c(lev[1:3],paste("Other","M4",sep=septype)), 1,at=labpos, padj=1, cex=1.5)
         #mtext("Group",1,at=3,padj=2.5, cex=1.5)
 
         # add points
@@ -197,7 +198,7 @@ h_boxplot_mask <- function(x=NULL, n=NULL, lev=grplevels, ylabel="Heterozygosity
         par(mar=c(5,5,2,2))
         boxplot(x[,n] ~ group, data=x, outline=FALSE, names=c(rep("",nlevel)), xlab="", ylab=ylabel, main="", col="gray80", cex.axis=1.5, cex.lab=1.5, lwd=2, ylim=ylimits)
         #mtext(lev,1,at=1:nlevel, padj=1, cex=1.5)
-        mtext(c(lev[1:3],paste("Other","M4",sep="\n")), 1,at=1:nlevel, padj=1, cex=1.5)
+	mtext(c(lev[1:3],paste("Other","M4",sep="\n")), 1,at=1:nlevel, padj=1, cex=1.5)
         #mtext("Group",1,at=3,padj=2.5, cex=1.5)
 
         # add points
@@ -1691,7 +1692,7 @@ eval $SFSCMD
 
 
 H estimates calculated above where stored in the M4_sequenced_FSJsamples_metadata.txt and in the 'H' field of the M4_sequenced_individual_metadata.tsv file 
-deposited to dryad.
+deposited to Dryad.
 
 # Visualize H distrubutions with boxplots (Figure 3C)
 
@@ -1828,7 +1829,7 @@ hvd_std.ci
 
 # The unstandardized and standardized results are consistent
 
-# Plot H vs depth (Fig. S7D)
+# Plot H vs depth (Figure S2C)
 
 biotype_col = bioclass_col(meta$POPULATION)
 
@@ -2051,7 +2052,7 @@ for (g in grp) {
 
 I. The following describes estimation of individual inbreeding coefficients, F, with ngsF using population-specific allele 
 frequencies estimated with without relatedness-pruning (F visualized in Figuree S1B). These values are in the 'F_PS_ALL' field of the 
-inbreed_coefficient_alternate_calculations.tsv file deposited to dryad.
+inbreed_coefficient_alternate_calculations.tsv file deposited to Dryad.
 
 Ia. # Calculate genotype likelihoods for populations (includes all individuals for each population)
 
@@ -2240,7 +2241,7 @@ eval $CMD
 
 II. The following describes estimation of individual inbreeding coefficients, F, with ngsF using population-specific allele frequencies estimated 
 using subsets of individuals for which all pairwise r was <= 0.4 (relatedness pruned subsets, F is visualized in Figure 3B). These F estimates are in 
-the 'F' field of the M4_sequenced_individual_metadata.tsv file deposited to dryad.
+the 'F' field of the M4_sequenced_individual_metadata.tsv file deposited to Dryad.
 
 IIa. # Estimate GLs for subsets from each population where all pairwise relatedness is <= 0.4.
 
@@ -2421,7 +2422,7 @@ were stored in the metadata file M4_sequenced_FSJsamples_metadata.txt and used a
 
 III. The following describes estimation of individual inbreeding coefficients, F, with ngsF using metapopulation-wide allele frequencies 
 estimated without relatedness pruning (F visualized in Figure S1B). These F estimates are in the 'F_META_ALL' of the inbreed_coefficient_alternate_calculations.tsv file 
-deposited to dryad.
+deposited to Dryad.
 
 IIIa. Calculate genotype likelihoods for all samples
 
@@ -2465,7 +2466,7 @@ tests using subsets of individuals for which all pairwise r < 0.4.
 
 --- start R code ---
 
-# read in F values calculated using population-specific allele frequencies. These F values are in the 'F' field of the M4_sequenced_individual_metadata.tsv file deposited to dryad.
+# read in F values calculated using population-specific allele frequencies. These F values are in the 'F' field of the M4_sequenced_individual_metadata.tsv file deposited to Dryad.
 f.popaf <- read.table('/mnt/research/Fitz_Lab/projects/mosaic/popgen/fstats/fsj_mosaic_biallelic_snps_main_autosomes_qc_all_F_pop_specific_ref_AF_fixedMAF.txt', head=TRUE)
 # local version at /home/tyler/Dropbox/research/jay/mosaic/popgen/fstats/fsj_mosaic_biallelic_snps_main_autosomes_qc_all_F_pop_specific_ref_AF_fixedMAF.txt
 
@@ -2567,7 +2568,7 @@ tests used all individuals (excluding E_030 from the residents due to admixed an
 
 --- start R code ---
 
-# read in F values calculated using population-specific allele frequencies. These are the values in the 'F_PS_ALL' column of the inbreed_coefficient_alternate_calculations.tsv file deposited to dryad.
+# read in F values calculated using population-specific allele frequencies. These are the values in the 'F_PS_ALL' column of the inbreed_coefficient_alternate_calculations.tsv file deposited to Dryad.
 f.popaf <- read.table('/mnt/research/Fitz_Lab/projects/mosaic/popgen/fstats/fsj_mosaic_biallelic_snps_main_autosomes_qc_all_F_pop_specific_ref_AF.txt', head=TRUE)
 
 # read in sets of individuals (local copies)
@@ -2640,7 +2641,7 @@ tests used all individuals (excluding E_030 from the residents due to admixed an
 --- start R code ---
 
 # read in F values calculated using Mosaic-wide allele frequencies (frequencies calculated using all mosaic individuals). These are the values in the 
-# 'F_META_ALL' column of the inbreed_coefficient_alternate_calculations.tsv deposited to dryad.
+# 'F_META_ALL' column of the inbreed_coefficient_alternate_calculations.tsv deposited to Dryad.
 f.all <- read.table('/mnt/research/Fitz_Lab/projects/mosaic/popgen/fstats/fsj_mosaic_biallelic_snps_main_autosomes_qc_all_F_formatted.txt', head=TRUE)
 
 # read in relatedness pruned subsets
@@ -2733,7 +2734,7 @@ V. Boxplots comparing distributions of individuals inbreeding
 
 Va. Boxplots for F estimated based on population-specific allele frequencies estimated using r-pruned subsets of individuals.
 
-F boxplots in Figure 3B. These are the F values in the 'F' field of the M4_sequenced_individual_metadata.tsv file on dryad.
+F boxplots in Figure 3B. These are the F values in the 'F' field of the M4_sequenced_individual_metadata.tsv file on Dryad.
 
 --- start R code ---
 
@@ -2808,7 +2809,7 @@ h_boxplot_mask(x=fdf, n=7, lev=grplevels, ylabel=expression(Individual~inbreedin
 
 Vb. Boxplots for F estimated based on population-specific allele frequencies estimated without r-pruning.
 
-F boxplots in Figure S1B (left panel). These are the F values in the 'F_PS_ALL' field of the inbreed_coefficient_alternate_calculations.tsv file on dryad.
+F boxplots in Figure S1B (left panel). These are the F values in the 'F_PS_ALL' field of the inbreed_coefficient_alternate_calculations.tsv file on Dryad.
 
 --- start R code ---
 
@@ -2846,8 +2847,9 @@ max(fdf$F_POP_SPECIFIC_AF)
 
 # plot
 
-#png(file='/home/tyler/Dropbox/research/jay/mosaic/figures/F_distribution_pop_specific_AF.png',width=7, height=7,units='in', res=300) # this is Figure S1B - left panel
-h_boxplot3(x=fdf, n=7, lev=grplevels, ylabel=expression(Individual~inbreeding~(italic(F))), pntlab=fdf$biopoint, seed=1947, color=meta$popcol, ylim=c(0,0.145))
+#png(file='/home/tyler/Dropbox/research/jay/mosaic/figures/F_distribution_pop_specific_AF_2.png',width=7, height=7,units='in', res=300) # this is Figure S1B - left panel
+h_boxplot3(x=fdf, n=7, lev=grplevels, ylabel=expression(Individual~inbreeding~(italic(F))), pntlab=fdf$biopoint, seed=1947, color=meta$popcol, ylim=c(0,0.145), 
+labpos = c(0.8,1.95,3,4.1), breaknames=FALSE)
 axis(2, at=c((0.0+0.05)/2, (0.05+0.1)/2, (0.1+0.15)/2), line=NA, labels=NA) # add some extra axis tick marks for clarity
 #dev.off()
 
@@ -2885,7 +2887,7 @@ h_boxplot_mask(x=fdf, n=7, lev=grplevels, ylabel=expression(Individual~inbreedin
 
 Vc. Boxplots for F estimated based on metapopulation allele frequencies estimated without r-pruning.
 
-F boxplots in Figure S1B (right panel). These are the F values in the 'F_META_ALL' field of the inbreed_coefficient_alternate_calculations.tsv file on dryad.
+F boxplots in Figure S1B (right panel). These are the F values in the 'F_META_ALL' field of the inbreed_coefficient_alternate_calculations.tsv file on Dryad.
 
 --- start R code ---
 
@@ -2923,8 +2925,9 @@ range(fcoef$V1)
 
 # plot
 
-#png(file='/home/tyler/Dropbox/research/jay/mosaic/figures/F_distribution.png',width=7, height=7,units='in', res=300)
-h_boxplot3(x=fcoef, n=1, lev=grplevels, ylabel=expression(Individual~inbreeding~(italic(F))), pntlab=fcoef$biopoint, seed=1947, color=meta$popcol, ylimits=c(0,0.17))
+#png(file='/home/tyler/Dropbox/research/jay/mosaic/figures/F_distribution_improved_labels.png',width=7, height=7,units='in', res=300) # Figure S1B - right panel
+h_boxplot3(x=fcoef, n=1, lev=grplevels, ylabel=expression(Individual~inbreeding~(italic(F))), pntlab=fcoef$biopoint, seed=1947, color=meta$popcol, ylimits=c(0,0.17), 
+labpos=c(0.8,1.95,3,4.1), breaknames=FALSE)
 axis(2, at=c((0.0+0.05)/2, (0.05+0.1)/2, (0.1+0.15)/2), line=NA, labels=NA) # add some extra axis tick marks for clarity
 #dev.off()
 
@@ -3352,7 +3355,7 @@ Combine high quality FROH estimates across all samples into a single file.
 'FROH_BEST' (what I consider the best Froh estimate) is Froh estimated using population-specific allele frequencies (when they could be estimated 
 with a sample size >= 10 after removing first degree relatives, r > 0.4) when possible. When estimating population-specific allele frequencies 
 was not possible the next most appropriate reference population was chosen, specifically the pooled donor sites for translocated jays or the entire 
-historic metapopulation for the 'other' M4 population individuals. The 'FROH_BEST' estimates were added to the metadata, /home/tyler/Dropbox/research/jay/mosaic/metadata/M4_sequenced_FSJsamples_metadata.txt, and the M4_sequenced_individual_metadata.tsv file deposited to dryad under the 'FROH' field.
+historic metapopulation for the 'other' M4 population individuals. The 'FROH_BEST' estimates were added to the metadata, /home/tyler/Dropbox/research/jay/mosaic/metadata/M4_sequenced_FSJsamples_metadata.txt, and the M4_sequenced_individual_metadata.tsv file deposited to Dryad under the 'FROH' field.
 
 --- start R code ---
 
@@ -3531,9 +3534,9 @@ meta.sub <- meta[-which(meta$LAB_ID == "T_072"),]
 range(meta.sub$FROH)
 #[1] 0.03469923 0.24783084
 
-#png(file='/home/tyler/Dropbox/research/jay/mosaic/figures/Froh_distribution_pop_specific_AF_improved_labels.png',width=7, height=7,units='in', res=300)
+#png(file='/home/tyler/Dropbox/research/jay/mosaic/figures/Froh_distribution_pop_specific_AF_improved_labels_v2.png',width=7, height=7,units='in', res=300)
 h_boxplot3(x=meta.sub, n=22, lev=levels(meta.sub$group), ylabel=expression(Individual~inbreeding~(italic(F[ROH]))), pntlab=meta.sub$biopoint, seed=1947, color=meta.sub$popcol, ylim=c(0,0.28),
-labpos=c(0.8,1.95,3,4))
+labpos=c(0.8,1.95,3,4.1), breaknames=FALSE)
 #dev.off()
 
 --- end R code ---
@@ -3554,7 +3557,7 @@ library(scales)
 library(boot)
 
 meta <- read.table('/home/tyler/Dropbox/research/jay/mosaic/metadata/M4_sequenced_FSJsamples_metadata.txt',head=TRUE)
-colnames(meta)[which(colnames(meta) == "pop_name_full")] = "POPULATION" # this is just to make column names consistent with the M4_sequenced_individual_metadata.tsv file on dryad
+colnames(meta)[which(colnames(meta) == "pop_name_full")] = "POPULATION" # this is just to make column names consistent with the M4_sequenced_individual_metadata.tsv file on Dryad
 biotype_col = bioclass_col(meta$POPULATION)
 meta$ptype = biopoint(meta$pop)
 meta$popcol = popcolor(meta)
@@ -3572,7 +3575,7 @@ meta$FROH_ALL = sapply(meta$LAB_ID,function(x,df){df$FROH_ALL_MOSAIC_AF[which(df
 meta$FROH_PS = sapply(meta$LAB_ID,function(x,df){df$FROH_BEST[which(df$ID == x)]},df=froh, USE.NAMES=FALSE)
 
 #I. Test for relationships between sequencing depth and F estimated from population-specific allele frequencies from r-pruned 
-#subsets of individuals ('F' in dryad M4_sequenced_individual_metadata.tsv file).
+#subsets of individuals ('F' in Dryad M4_sequenced_individual_metadata.tsv file).
 
 ngsf_f_depth_ps_model = lm(F_PS ~ autosome_depth, data=meta)
 
@@ -3619,7 +3622,7 @@ ngsf_f_depth.ci
 
 # plot F vs depth (Figure S2A)
 
-#png(file="/home/tyler/Dropbox/research/jay/mosaic/figures/methods_evaluation/ngsF_F_vs_depth_pop_specific.png", width=7, height=7, units='in', res=300)
+#png(file="/home/tyler/Dropbox/research/jay/mosaic/figures/methods_evaluation/ngsF_F_vs_depth_pop_specific.png", width=7, height=7, units='in', res=300) # Figure S2A - left panel
 par(mgp=c(2.65,1,0), mar=c(5,4.3,4,2) + 0.1)
 plot(x = meta$autosome_depth, y = meta$F_PS, cex=1.5, pch=21, col=biotype_col, bg=alpha(biotype_col,0.6), xlab="Average sequencing depth",
 ylab=bquote(italic(F[ngsF])),cex.lab=1.5, cex.axis=1.5, main="Population-specific AF")
@@ -3629,7 +3632,7 @@ text(x=11,y=0.02,label=bquote(italic(r)^2 == .(round(summary(ngsf_f_depth_ps_mod
 #dev.off()
 
 # y-limit zoom
-#png(file="/home/tyler/Dropbox/research/jay/mosaic/figures/methods_evaluation/ngsF_F_vs_depth_pop_specific_yzoom.png", width=7, height=7, units='in', res=300)
+#png(file="/home/tyler/Dropbox/research/jay/mosaic/figures/methods_evaluation/ngsF_F_vs_depth_pop_specific_yzoom.png", width=7, height=7, units='in', res=300) # Figure S2A - right panel
 par(mgp=c(2.65,1,0), mar=c(5,4.3,4,2) + 0.1)
 plot(x = meta$autosome_depth, y = meta$F_PS, cex=1.5, pch=21, col=biotype_col, bg=alpha(biotype_col,0.6), xlab="Average sequencing depth",
 ylab=bquote(italic(F[ngsF])),cex.lab=1.5, cex.axis=1.5, main="Population-specific AF", ylim=c(0,0.02))
@@ -3637,7 +3640,7 @@ legend('topright',legend=c("Contemporary CR","Resident CR","Donor population","O
 #dev.off()
 
 #II. Test for relationships between sequencing depth and F estimated from metapopulation allele frequencies with no r-pruning 
-# ('F_META_ALL' in dryad inbreed_coefficient_alternate_calculations.tsv file). 
+# ('F_META_ALL' in Dryad inbreed_coefficient_alternate_calculations.tsv file). 
 
 ngsf_f_depth_model = lm(F_ALL ~ autosome_depth, data=meta)
 
@@ -3695,7 +3698,7 @@ text(x=11.4,y=0.0335,label=bquote(italic(r)^2 == .(round(summary(ngsf_f_depth_mo
 #dev.off()
 
 #III. Test for relationships between sequencing depth and Froh estimated with population-specific allele frequencies from r-pruned 
-#subsets of individuals ('FROH' in dryad M4_sequenced_individual_metadata.tsv file).
+#subsets of individuals ('FROH' in Dryad M4_sequenced_individual_metadata.tsv file).
 
 froh_depth_ps_model = lm(FROH_PS ~ autosome_depth, data=meta)
 
@@ -3754,7 +3757,7 @@ text(x=11.3,y=0.07,label=bquote(italic(r)^2 == .(round(summary(froh_depth_ps_mod
 #dev.off()
 
 #IV. Test for relationships between sequencing depth and Froh estimated with metapopulation-wide allele frequencies from r-pruned 
-#subsets of individuals ('FROH_META_PRUNE' in dryad inbreed_coefficient_alternate_calculations.tsv file).
+#subsets of individuals ('FROH_META_PRUNE' in Dryad inbreed_coefficient_alternate_calculations.tsv file).
 
 froh_depth_model = lm(FROH_ALL ~ autosome_depth, data=meta)
 
@@ -3831,11 +3834,11 @@ library(boot)
 library(scales)
 
 # Read in F estimated using allele frequencies based on all individuals from each population/group (no relatedness pruning). The population-specific allele frequencies were used to 
-# estimate F. These are the 'F_PS_ALL' values in the inbreed_coefficient_alternate_calculations.tsv dryad file. 
+# estimate F. These are the 'F_PS_ALL' values in the inbreed_coefficient_alternate_calculations.tsv Dryad file. 
 f.all <- read.table('/home/tyler/Dropbox/research/jay/mosaic/popgen/fstats/fsj_mosaic_biallelic_snps_main_autosomes_qc_all_F_pop_specific_ref_AF.txt',head=TRUE)
 
 # Read in F estimated using allele frequencies based on subsets of individuals for which all pairwise relatedness was <= 0.4 (relatedness pruned). The population-specific allele 
-# frequencies were used to estimate F. These are the 'F' values in the M4_sequenced_individual_metadata.tsv dryad file.
+# frequencies were used to estimate F. These are the 'F' values in the M4_sequenced_individual_metadata.tsv Dryad file.
 f.prune <- read.table('/home/tyler/Dropbox/research/jay/mosaic/popgen/fstats/fsj_mosaic_biallelic_snps_main_autosomes_qc_all_F_pop_specific_ref_AF_fixedMAF.txt',head=TRUE)
 
 # read in metadata
@@ -3876,6 +3879,9 @@ shapiro.test(resid(fmod))
 #W = 0.92922, p-value = 0.0001408
 
 #hist(resid(fmod),breaks=20) # errors appear to deviate only slightly from a normal distribution, but will still bootstrap to test for correlation
+
+ftype.boot <- boot(data.frame(x=meta$F.ALL, y=meta$F.PRUNE), getBeta1, R=10000, stype="i", sim="ordinary")
+ftype.ci <- boot.ci(ftype.boot, conf=0.99, type=c("perc","bca"))
 
 ftype.ci
 #BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS
@@ -3991,7 +3997,7 @@ library(scales)
 library(boot)
 
 meta <- read.table('/home/tyler/Dropbox/research/jay/mosaic/metadata/M4_sequenced_FSJsamples_metadata.txt',head=TRUE)
-colnames(meta)[which(colnames(meta) == "pop_name_full")] = "POPULATION" # this is just to make column names consistent with the M4_sequenced_individual_metadata.tsv file on dryad
+colnames(meta)[which(colnames(meta) == "pop_name_full")] = "POPULATION" # this is just to make column names consistent with the M4_sequenced_individual_metadata.tsv file on Dryad
 biotype_col = bioclass_col(meta$POPULATION)
 meta$ptype = biopoint(meta$pop)
 meta$popcol = popcolor(meta)
@@ -4465,9 +4471,9 @@ axis.width = axis.height * pc1.scale
 
 # shape points
 x11(width=axis.width,height=axis.height)
-#png(file='/home/tyler/Dropbox/research/jay/mosaic/figures/pca_pop_colors.png',width=axis.width, height=axis.height, units='in', res=300)
-par(mar=c(5.1,4.1,4,2)+0.1)
-plot(x=eig$vectors[,1], y=eig$vectors[,2], xlab=paste0("PC",1,", ",var[1],"%"), ylab=paste0("PC",2,", ",var[2],"%"),cex.axis=1.4, cex.lab=1.4,
+#png(file='/home/tyler/Dropbox/research/jay/mosaic/figures/pca_pop_colors_v2.png',width=axis.width, height=axis.height, units='in', res=300)
+par(mar=c(5.1,4.1,4,2)+0.1,mgp=c(2.5,1,0))
+plot(x=eig$vectors[,1], y=eig$vectors[,2], xlab=paste0("PC",1,", ",var[1],"%"), ylab=paste0("PC",2,", ",var[2],"%"),cex.axis=1.2, cex.lab=1.2,
 pch=meta$biopoint, col=meta$popcol, bg=alpha(meta$popcol,0.65), cex=1.7, lwd=1.2)
 points(x=eig$vectors[rswk.idx,1], y=eig$vector[rswk.idx,2], pch=3, cex=1.3, col="grey20", lwd=1.5)
 
@@ -4989,7 +4995,7 @@ scale_fill_manual(values=c(alpha("gray70",0.6),alpha("gray40",0.6))) +
 
 scale_x_continuous(breaks=time.periods2) +
 
-scale_y_continuous(name="Number ancestors", breaks=seq(from=0,to=75,by=5), sec.axis=sec_axis(~./75*prop.cutoff, name="Proportion ancestor contribution to population", 
+scale_y_continuous(name="Number of ancestors", breaks=seq(from=0,to=75,by=5), sec.axis=sec_axis(~./75*prop.cutoff, name="Proportion of ancestor contribution to population", 
 breaks=seq(from=0,to=prop.cutoff,by=0.02), )) +
 
 theme(legend.position="none", axis.text.x = element_text(size=17,color="black"), axis.ticks.length.x=unit(0.25,"cm"), axis.title.x=element_text(size=20, color="black", hjust=0.8),
@@ -5138,7 +5144,7 @@ for (i in pat) {
 }
 
 # begin plot
-#png(file='/home/tyler/Dropbox/research/jay/mosaic/figures/T_IE_pop_contribution_pfocal_barplot_2003_2022.png',width=16, height=7, units='in', res=300)
+#png(file='/home/tyler/Dropbox/research/jay/mosaic/figures/T_IE_pop_contribution_pfocal_barplot_2003_2022_v2.png',width=16, height=7, units='in', res=300)
 x11(width=16,height=7)
 ggplot(pop.pgroup3, aes(fill=ID, y=proportion, x=year)) +
 
@@ -5155,7 +5161,7 @@ annotate(x=0, xend=0, y=0, yend=1, colour="black", lwd=0.75, geom="segment") +
 
 xlab("Year") +
 
-ylab("Proportion ancestor contribution to population")
+ylab("Proportion of ancestor contribution to population")
 
 #dev.off()
 
@@ -5523,8 +5529,8 @@ summary(skew_model)
 #Multiple R-squared:  0.619,    Adjusted R-squared:  0.6087 
 #F-statistic: 60.12 on 1 and 37 DF,  p-value: 2.878e-09
 
-#summary(skew_model)$r.square
-[1] 0.6190199
+summary(skew_model)$r.square
+#[1] 0.6190199
 
 shapiro.test(resid(skew_model)) # errors deviate slightly from normal distribution so will use bootstrap to test for correlation between the two measures of genetic contribution
 #
@@ -5551,20 +5557,19 @@ skew_beta.ci
 #95%   (12.35, 44.30 )   (15.67, 46.44 )  
 #Calculations and Intervals on Original Scale
 
-# scatterplot of K vs pedigree-based genetic contribution (Figure S6)
+# scatterplot of K vs pedigree-based genetic contribution (Figure S4E)
 
-#png(file='/home/tyler/Dropbox/research/jay/mosaic/figures/pedigree_vs_genetic_skew_correlation.png',width=7, height=7, units='in', res=300)
-par(mgp=c(2.9,1,0))
-plot(x=share$Swtr, y=share$N_GENOME_COPIES, xlab=expression(paste("Average rank-weighted relatedness (", italic(K),")", sep="")), 
-ylab="Pedigree expected number genomic copies", pch=21, col=alpha("black",0.8), bg=alpha("black",0.5),cex=1.4, cex.lab=1.4, cex.axis=1.4, lwd=1.2)
+#png(file='/home/tyler/Dropbox/research/jay/mosaic/figures/pedigree_vs_genetic_skew_correlation.png',width=5.2, height=5, units='in', res=300)
+x11(width=5.2, height=5)
+par(mgp=c(2.7,1,0), mar=c(3.7,4,0.2,0.8))
+plot(x=share$Swtr, y=share$N_GENOME_COPIES, xlab=expression(paste("Average rank-weighted relatedness (", italic(K),")", sep="")),
+ylab="Pedigree number of genomic copies", pch=21, col=alpha("black",0.8), bg=alpha("black",0.5),cex=1.4, cex.lab=1.4, cex.axis=1.4, lwd=1.2)
 abline(a=skew_model$coefficients[1], b=skew_model$coefficients[2], col="grey20")
-text(x=0.035,y=1.24,label=bquote(italic(r)^2 == .(round(summary(skew_model)$r.square, digits=2))), cex=1.3)
+text(x=0.033,y=1.24,label=bquote(italic(r)^2 == .(round(summary(skew_model)$r.square, digits=2))), cex=1.4)
 #dev.off()
 
 
 # line plot (Figure 4B)
-
-library(scales)
 
 # set point colors according to biological origin (grey indicates no contribution)
 
@@ -5641,13 +5646,15 @@ for (i in urank.gen) {
 
 
 # make canvas and plot
-#png(file='/home/tyler/Dropbox/research/jay/mosaic/figures/ped_vs_genetic_skew_comparison_improved_label.png',width=6, height=7, units='in', res=300)
-
+#png(file='/home/tyler/Dropbox/research/jay/mosaic/figures/ped_vs_genetic_skew_comparison_improved_label_2.png',width=6, height=7, units='in', res=300)
 x11(width=6,height=7)
+
+par(mar=c(5, 4.2, 4, 2), mgp=c(2.4,1,0))
+
 maxrank = max(ped1.sort$ped.rank, ped1.sort$gen.rank, na.rm=TRUE)
 y.marks = c(1,seq(from=5,to=2*round(maxrank/2),by=5))
-plot(1,type="n", xlab="", ylab="Rank of the genetic contribution to the 2021 cohort", ylim=c(maxrank, -1), xlim=c(0,1),xaxt='n', yaxt='n', cex.lab=1.3) # blank canvas
-axis(side=1,at=c(xa,xb),labels=c("Pedigree","Genetic"),cex.axis=1.3) # x-axis
+plot(1,type="n", xlab="", ylab="Rank of the genetic contribution to the 2021 cohort", ylim=c(maxrank, -1), xlim=c(0,1),xaxt='n', yaxt='n', cex.lab=1.4) # blank canvas
+axis(side=1,at=c(xa,xb),labels=c("Pedigree","Genetic"),cex.axis=1.4) # x-axis
 axis(side=2,at=y.marks,labels=y.marks,cex.axis=1.3) # y-axis
 
 # add points
@@ -5669,7 +5676,7 @@ for (i in 1:nrow(share)) {
 # add annotations
 text(x=xa,y=-1.2,paste0("n=",length(which(!is.na(ped1.sort$ped.rank)))),cex=1.2)
 text(x=xb,y=-1.2,paste0("n=",length(which(!is.na(ped1.sort$gen.rank)))),cex=1.2)
-legend('bottomleft',c("Resident","Translocated", "No contribution"),pch=21,col=c(rescol,transcol,alpha("grey40",0.65)),pt.bg=c(rescol,transcol,alpha("grey40",0)),bty='n', cex=1, pt.cex=1.3)
+legend('bottomleft',c("Resident","Translocated", "No contribution"),pch=21,col=c(rescol,transcol,alpha("grey40",0.65)),pt.bg=c(rescol,transcol,alpha("grey40",0)),bty='n', cex=1.15, pt.cex=1.45)
 
 #dev.off()
 
@@ -5941,6 +5948,7 @@ popsize # census size
 #20 2021      144
 #21 2022      134
 
+#write.table(popsize,'/home/tyler/Dropbox/research/jay/mosaic/monitoring_data/cr_census_population_size.tsv',col.names=TRUE,row.names=FALSE,sep="\t",quote=FALSE)
 
 ## Plot population size change over time (Figure 1C)
 
@@ -5948,10 +5956,10 @@ popsize # census size
 time.periods2 <- time.periods[2:length(time.periods)]
 popsize.sub <- popsize[which(popsize$YEAR > 2002),]
 
-#png(file='/home/tyler/Dropbox/research/jay/mosaic/figures/temporal_census_size_adjusted_2003_2022.png', width=16, height=7, units='in', res=300) # does not count self-contribution
+#png(file='/home/tyler/Dropbox/research/jay/mosaic/figures/temporal_census_size_adjusted_2003_2022_v2.png', width=16, height=7, units='in', res=300) # does not count self-contribution
 x11(width=16,height=7)
 par(mgp = c(2.75,1,0))
-plot(1, type="n", xlim=c(time.periods2[1]-0.5,time.periods2[length(time.periods2)]), ylim=c(0,max(popsize.sub$CENSUS_N)+5),xlab="Year", ylab="Number individuals", 
+plot(1, type="n", xlim=c(time.periods2[1]-0.5,time.periods2[length(time.periods2)]), ylim=c(0,max(popsize.sub$CENSUS_N)+5),xlab="Year", ylab="Number of individuals", 
 main="",xaxt='n', cex.axis=1.3, cex.lab=1.5, xaxt='n')
 axis(side=1,at=time.periods2,labels=time.periods2,cex=1.5,cex.axis=1.3)
 axis(side=2,at=seq(from=0,to=150,by=25),labels=seq(from=0,to=150,by=25),cex=1.5,cex.axis=1.3)
@@ -6006,8 +6014,8 @@ Classify the frequency of different breeding pair types
 --- start R code ---
 
 # read in data
-# Note that the cr_ancestors_20240602.tsv and cr_ped_20240602.tsv files are deposited to dryad. The CUMULATIVE_NESTING_DATA_FINAL_05122023.tsv data 
-# are in the nest_metadata_20241115.tsv dryad file and also contained in the 'nest' tab of the M4_FSJ_monitoring.xlsx file on dryad.
+# Note that the cr_ancestors_20240602.tsv and cr_ped_20240602.tsv files are deposited to Dryad. The CUMULATIVE_NESTING_DATA_FINAL_05122023.tsv data 
+# are in the nest_metadata_20241115.tsv Dryad file and also contained in the 'nest' tab of the M4_FSJ_monitoring.xlsx file on Dryad.
 nest <- read.csv('/home/tyler/Dropbox/research/jay/mosaic/simulations/pedigree_sims/inputs/nest_metadata_20241115.tsv', head=TRUE, sep="\t")
 anc <- read.table('/home/tyler/Dropbox/research/jay/mosaic/simulations/pedigree_sims/inputs/cr_ancestors_20240602.tsv',head=FALSE)
 ped <- read.table('/home/tyler/Dropbox/research/jay/mosaic/simulations/pedigree_sims/inputs/cr_ped_20240602.tsv',head=TRUE)
@@ -6291,84 +6299,173 @@ ci.df$wsak_5[1:which(ci.df$year == 2007)] = NA
 ci.df$wsak_95[1:which(ci.df$year == 2007)] = NA
 ci.df$wsak_max[1:which(ci.df$year == 2007)] = NA
 
-# plot simulation max contribution and lower 0.95 quantile with observed RLS-K and WSA-K contributions over time (Figure S5A)
+# plot simulation max contribution and lower 0.95 quantile with observed RLS-K and WSA-K contributions over time (Figure S4C: uses "narrow panel" version)
 
 first_lr_year = 2004 # this is the first year that local recruits were born into the CR
 
 ci.df.reprosub = ci.df[which(ci.df$year == first_lr_year):nrow(ci.df),]
 
-maxplot <- ggplot(ci.df.reprosub, aes(x=year, y=rlsk_obs)) + 
+# narrow panel version (used in paper)
+yrs1 = seq(from=first_lr_year, to=2022, by=1)
+xlab1 = rep("",length(yrs1))
+for (i in 1:length(yrs1)) {if (i == 1 || (i-1) %% 3 == 0) xlab1[i] = yrs1[i]}
+xtick1 = rep(0.20,length(yrs1))
+xtick1[which(xlab1 == "")] = 0.11
+
+
+maxplot <- ggplot(ci.df.reprosub, aes(x=year, y=rlsk_obs)) +
 theme_classic() +
 geom_ribbon(aes(ymin = max_min, ymax = max_max), fill="gray87") +
-geom_ribbon(aes(ymin = max_min, ymax = max_95), fill="gray65") + 
-geom_line(colour="red3", linewidth=1.5) +
-geom_line(aes(x=year, y=wsak_obs), colour="blue1", linewidth=1.5) + 
-scale_x_continuous(breaks=first_lr_year:2022) +
-scale_y_continuous(name="Maximum proportion of ancestor contribution", 
-breaks=seq(from=0,to=max(c(ci.df.reprosub$max_max, ci.df.reprosub$rlsk_obs, ci.df.reprosub$wsak_obs)+0.01,na.rm=TRUE), by=0.02)) +
+geom_ribbon(aes(ymin = max_min, ymax = max_95), fill="gray65") +
+geom_line(colour="red3", linewidth=1.2) +
+geom_line(aes(x=year, y=wsak_obs), colour="blue1", linewidth=1.2) +
+scale_x_continuous(name="Year", breaks=seq(from=first_lr_year, to=2022, by=1), labels=xlab1) +
+scale_y_continuous(name="Maximum proportion of ancestor contribution",
+breaks=seq(from=0,to=max(c(ci.df.reprosub$max_max, ci.df.reprosub$rlsk_obs, ci.df.reprosub$wsak_obs)+0.01,na.rm=TRUE), by=0.05)) +
 
-theme(legend.position="none", axis.text.x = element_text(size=17,color="black"), axis.ticks.length.x=unit(0.25,"cm"), axis.title.x=element_text(size=20, color="black"),
-axis.text.y = element_text(size=17,color="black"), axis.ticks.length.y=unit(0.25,"cm"),axis.title.y=element_text(size=20,color="black", vjust=1.5),
-axis.title.y.right = element_text(size=20, color="black", vjust=1.5))
+theme(legend.position="none", axis.text.x = element_text(size=10.8,color="black"), axis.ticks.length.x=unit(xtick1,"cm"), axis.title.x=element_text(size=11.7, color="black"),
+axis.text.y = element_text(size=10.8,color="black"), axis.ticks.length.y=unit(0.18,"cm"),axis.title.y=element_text(size=11.7,color="black", vjust=1.5),
+axis.title.y.right = element_text(size=20, color="black", vjust=1.5)) # + # uncomment for line annotations
+
+# uncomment to add line annotations
+#annotate(geom="text", x = 2005, y = 0.028, label = "RLS-K", color="red3", size=2) +
+#annotate(geom="text", x = 2008.4, y = 0.05, label = "WSA-K", color="blue1", size=2)
+
+x11(width=4,height=4)
+#png(file='/home/tyler/Dropbox/research/jay/mosaic/figures/simulation/simulation_max_ancestor_contribution_narrow.png',width=4, height=4, units='in', res=300)
+maxplot
+#dev.off()
+
+
+# wide panel version below
+#maxplot <- ggplot(ci.df.reprosub, aes(x=year, y=rlsk_obs)) + 
+#theme_classic() +
+#geom_ribbon(aes(ymin = max_min, ymax = max_max), fill="gray87") +
+#geom_ribbon(aes(ymin = max_min, ymax = max_95), fill="gray65") + 
+#geom_line(colour="red3", linewidth=1.5) +
+#geom_line(aes(x=year, y=wsak_obs), colour="blue1", linewidth=1.5) + 
+#scale_x_continuous(name="Year", breaks=first_lr_year:2022) +
+#scale_y_continuous(name="Maximum proportion of ancestor contribution", 
+#breaks=seq(from=0,to=max(c(ci.df.reprosub$max_max, ci.df.reprosub$rlsk_obs, ci.df.reprosub$wsak_obs)+0.01,na.rm=TRUE), by=0.02)) +
+
+#theme(legend.position="none", axis.text.x = element_text(size=17,color="black"), axis.ticks.length.x=unit(0.25,"cm"), axis.title.x=element_text(size=20, color="black"),
+#axis.text.y = element_text(size=17,color="black"), axis.ticks.length.y=unit(0.25,"cm"),axis.title.y=element_text(size=20,color="black", vjust=1.5),
+#axis.title.y.right = element_text(size=20, color="black", vjust=1.5)) # + # uncomment for line annoations
 
 # uncomment to add line annotations
 #annotate(geom="text", x = 2004.7, y = 0.028, label = "RLS-K", color="red3", size=5.5) +
-#annotate(geom="text", x = 2008.4, y = 0.05, label = "WSA-K", color="blue1", size=5.5) +
+#annotate(geom="text", x = 2008.4, y = 0.05, label = "WSA-K", color="blue1", size=5.5)
 
-x11(width=16,height=7)
-#png(file='/home/tyler/Dropbox/research/jay/mosaic/figures/simulation/simulation_max_ancestor_contribution_.png',width=16, height=7, units='in', res=300)
-maxplot
+#x11(width=16,height=7)
+#png(file='/home/tyler/Dropbox/research/jay/mosaic/figures/simulation/simulation_max_ancestor_contribution.png',width=16, height=7, units='in', res=300)
+#maxplot
 #dev.off()
 
 max(ci.df.reprosub$max_max) # maximum simulated contribution in a single year by a single individual
 #[1] 0.257174
 
-# plot simulated RLS-K and WSA-K max contributions and 0.95 quantiles, along with observed contribution lines over time (Figure S4B)
+# plot simulated RLS-K and WSA-K max contributions and 0.95 quantiles, along with observed contribution lines over time (Figure S4B: uses "narrow panel" version)
 
 ci.df.rlsksub = ci.df[which(ci.df$year == 2003):nrow(ci.df),]
+
+# narrow panel version (used in paper)
+yrs2 = seq(from=ci.df.rlsksub$year[1], to=2022, by=1)
+xlab2 = rep("",length(yrs2))
+for (i in 1:length(yrs2)) {if (i == 1 || (i-1) %% 3 == 0) xlab2[i] = yrs2[i]}
+xtick2 = rep(0.20,length(yrs2))
+xtick2[which(xlab2 == "")] = 0.11
 
 top_pair_plot <- ggplot(ci.df.rlsksub, aes(x=year, y=rlsk_obs)) +
 theme_classic() +
 geom_ribbon(aes(ymin = rlsk_min, ymax = rlsk_95), fill="lightcoral", alpha=0.5) +
 geom_ribbon(aes(ymin = wsak_min, ymax = wsak_95), fill="lightblue3", alpha=0.6) +
-geom_line(aes(x=year, y=rlsk_max), colour="lightcoral", alpha=0.5, linewidth=1.3, linetype="dashed") +
-geom_line(aes(x=year, y=wsak_max), colour="lightblue3", alpha=0.6, linewidth=1.3, linetype="dashed") +
-geom_line(colour="red3", linewidth=1.5) +
-geom_line(aes(x=year, y=wsak_obs), colour="blue1", linewidth=1.5) +
-scale_x_continuous(breaks=ci.df.rlsksub$year[1]:2022) +
-scale_y_continuous(name="Proportion of ancestor contribution to population", 
-breaks=seq(from=0,to=max(c(ci.df.rlsksub$rlsk_max, ci.df.rlsksub$rlsk_obs)+0.01,na.rm=TRUE), by=0.02)) +
+geom_line(aes(x=year, y=rlsk_max), colour="lightcoral", alpha=0.5, linewidth=1.1, linetype="dashed") +
+geom_line(aes(x=year, y=wsak_max), colour="lightblue3", alpha=0.6, linewidth=1.1, linetype="dashed") +
+geom_line(colour="red3", linewidth=1.2) +
+geom_line(aes(x=year, y=wsak_obs), colour="blue1", linewidth=1.2) +
+scale_x_continuous(name="Year", breaks=seq(from=ci.df.rlsksub$year[1], to=2022, by=1), labels=xlab2) +
+scale_y_continuous(name="Proportion of ancestor contribution to population",
+breaks=seq(from=0,to=max(c(ci.df.rlsksub$rlsk_max, ci.df.rlsksub$rlsk_obs)+0.01,na.rm=TRUE), by=0.05)) +
 
-theme(legend.position="none", axis.text.x = element_text(size=17,color="black"), axis.ticks.length.x=unit(0.25,"cm"), axis.title.x=element_text(size=20, color="black"),
-axis.text.y = element_text(size=17,color="black"), axis.ticks.length.y=unit(0.25,"cm"),axis.title.y=element_text(size=20,color="black", vjust=1.5),
+theme(legend.position="none", axis.text.x = element_text(size=10.8,color="black"), axis.ticks.length.x=unit(xtick2,"cm"), axis.title.x=element_text(size=11.7, color="black"),
+axis.text.y = element_text(size=10.8,color="black"), axis.ticks.length.y=unit(0.18,"cm"),axis.title.y=element_text(size=11.7,color="black", vjust=1.5),
 axis.title.y.right = element_text(size=20, color="black", vjust=1.5))
 
-x11(width=16,height=7)
-#png(file='/home/tyler/Dropbox/research/jay/mosaic/figures/simulation/simulation_rlsk_wsak_contribution.png',width=16, height=7, units='in', res=300)
+x11(width=4,height=4)
+#png(file='/home/tyler/Dropbox/research/jay/mosaic/figures/simulation/simulation_rlsk_wsak_contribution_narrow.png',width=4, height=4, units='in', res=300)
 top_pair_plot
 #dev.off()
 
-# plot simulated maximum and 0.95 quantile for the observed top 16 genetic contributors along with their observed contribution line over time (Figure S4A)
+
+# wide panel version
+#top_pair_plot <- ggplot(ci.df.rlsksub, aes(x=year, y=rlsk_obs)) +
+#theme_classic() +
+#geom_ribbon(aes(ymin = rlsk_min, ymax = rlsk_95), fill="lightcoral", alpha=0.5) +
+#geom_ribbon(aes(ymin = wsak_min, ymax = wsak_95), fill="lightblue3", alpha=0.6) +
+#geom_line(aes(x=year, y=rlsk_max), colour="lightcoral", alpha=0.5, linewidth=1.3, linetype="dashed") +
+#geom_line(aes(x=year, y=wsak_max), colour="lightblue3", alpha=0.6, linewidth=1.3, linetype="dashed") +
+#geom_line(colour="red3", linewidth=1.5) +
+#geom_line(aes(x=year, y=wsak_obs), colour="blue1", linewidth=1.5) +
+#scale_x_continuous(name="Year", breaks=ci.df.rlsksub$year[1]:2022) +
+#scale_y_continuous(name="Proportion of ancestor contribution to population", 
+#breaks=seq(from=0,to=max(c(ci.df.rlsksub$rlsk_max, ci.df.rlsksub$rlsk_obs)+0.01,na.rm=TRUE), by=0.02)) +
+
+#theme(legend.position="none", axis.text.x = element_text(size=17,color="black"), axis.ticks.length.x=unit(0.25,"cm"), axis.title.x=element_text(size=20, color="black"),
+#axis.text.y = element_text(size=17,color="black"), axis.ticks.length.y=unit(0.25,"cm"),axis.title.y=element_text(size=20,color="black", vjust=1.5),
+#axis.title.y.right = element_text(size=20, color="black", vjust=1.5))
+
+#x11(width=16,height=7)
+#png(file='/home/tyler/Dropbox/research/jay/mosaic/figures/simulation/simulation_rlsk_wsak_contribution.png',width=16, height=7, units='in', res=300)
+#top_pair_plot
+#dev.off()
+
+# plot simulated maximum and 0.95 quantile for the observed top 16 genetic contributors along with their observed contribution line over time (Figure S4A: uses "narrow panel" version )
 
 top16_first_year = min(ped$COHORT[which(ped$ID %in% top16 == TRUE)])
 
 ci.df.top16sub = ci.df[which(ci.df$year == top16_first_year):nrow(ci.df),]
 
+# narrow panel version (used in paper)
+yrs3 = seq(from=top16_first_year, to=2022, by=1)
+xlab3 = rep("",length(yrs3))
+for (i in 1:length(yrs3)) {if (i == 1 || (i-1) %% 3 == 0) xlab3[i] = yrs3[i]}
+xtick3 = rep(0.20,length(yrs3))
+xtick3[which(xlab3 == "")] = 0.11
+
 top16_plot <- ggplot(ci.df.top16sub, aes(x=year, y=top16_obs)) +
 theme_classic() +
 geom_ribbon(aes(ymin = top16_min, ymax = top16_max), fill="gray87") +
 geom_ribbon(aes(ymin = top16_min, ymax = top16_95), fill="gray65") +
-geom_line(colour="black", linewidth=1.5) +
-scale_x_continuous(breaks=top16_first_year:2022) +
-scale_y_continuous(name="Proportion ancestor contribution by top contributors", breaks=seq(from=0,to=max(c(ci.df.top16sub$top16_max, ci.df.top16sub$top16_obs)+0.01,na.rm=TRUE), by=0.10)) +
+geom_line(colour="black", linewidth=1.2) +
+scale_x_continuous(name="Year", breaks=seq(from=top16_first_year, to=2022, by=1), labels=xlab3) +
+scale_y_continuous(name="Proportion of ancestor contribution by the top 16", breaks=seq(from=0,to=max(c(ci.df.top16sub$top16_max, ci.df.top16sub$top16_obs)+0.05,na.rm=TRUE), by=0.10)) +
 
-theme(legend.position="none", axis.text.x = element_text(size=17,color="black"), axis.ticks.length.x=unit(0.25,"cm"), axis.title.x=element_text(size=20, color="black"),
-axis.text.y = element_text(size=17,color="black"), axis.ticks.length.y=unit(0.25,"cm"),axis.title.y=element_text(size=20,color="black", vjust=1.5),
+theme(legend.position="none", axis.text.x = element_text(size=10.8,color="black"), axis.ticks.length.x=unit(xtick3,"cm"), axis.title.x=element_text(size=11.7, color="black"),
+axis.text.y = element_text(size=10.8,color="black"), axis.ticks.length.y=unit(0.18,"cm"),axis.title.y=element_text(size=11.7,color="black", vjust=1.5),
 axis.title.y.right = element_text(size=20, color="black", vjust=1.5))
 
-x11(width=16,height=7)
-#png(file='/home/tyler/Dropbox/research/jay/mosaic/figures/simulation/simulation_top16_ancestors_contribution.png',width=16, height=7, units='in', res=300)
+#x11(width=4,height=4)
+#png(file='/home/tyler/Dropbox/research/jay/mosaic/figures/simulation/simulation_top16_ancestors_contribution_narrow.png',width=4, height=4, units='in', res=300)
 top16_plot
+#dev.off()
+
+
+# wide panel version
+#top16_plot <- ggplot(ci.df.top16sub, aes(x=year, y=top16_obs)) +
+#theme_classic() +
+#geom_ribbon(aes(ymin = top16_min, ymax = top16_max), fill="gray87") +
+#geom_ribbon(aes(ymin = top16_min, ymax = top16_95), fill="gray65") +
+#geom_line(colour="black", linewidth=1.5) +
+#scale_x_continuous(breaks=top16_first_year:2022) +
+#scale_y_continuous(name="Proportion ancestor contribution by top contributors", breaks=seq(from=0,to=max(c(ci.df.top16sub$top16_max, ci.df.top16sub$top16_obs)+0.01,na.rm=TRUE), by=0.10)) +
+
+#theme(legend.position="none", axis.text.x = element_text(size=17,color="black"), axis.ticks.length.x=unit(0.25,"cm"), axis.title.x=element_text(size=20, color="black"),
+#axis.text.y = element_text(size=17,color="black"), axis.ticks.length.y=unit(0.25,"cm"),axis.title.y=element_text(size=20,color="black", vjust=1.5),
+#axis.title.y.right = element_text(size=20, color="black", vjust=1.5))
+
+#x11(width=16,height=7)
+#png(file='/home/tyler/Dropbox/research/jay/mosaic/figures/simulation/simulation_top16_ancestors_contribution.png',width=16, height=7, units='in', res=300)
+#top16_plot
 #dev.off()
 
 # mean simulated contributions of observed top 16 contributors
@@ -6437,11 +6534,11 @@ calcMaxAvg <- function(pedres=NULL, ped = NULL, start_year) {
 	ind_avg = rep(NA, length(5:(ncol(pedres$sim[[1]])-2)))
 	ind_val = rep(NA, length(pedres$year))
 	for (sim_n in 1:nrow(pedres$sim[[1]])) {
-	        print(sim_n)
+		#print(sim_n)
 	        ind_avg[1:length(ind_avg)] = NA
 	        ind_iter = 1;
 	        for (ind_idx in 5:(ncol(pedres$sim[[1]])-2)) {
-	                id = colnames(pedres$sim[[yr_idx]])[ind_idx]
+	                id = colnames(pedres$sim[[1]])[ind_idx]
 	                ind_val[1:length(ind_val)] = NA
 	                year_iter = 1;
 	                for (yr_idx in which(pedres$year == start_year):length(pedres$year)) {
@@ -6461,10 +6558,12 @@ calcMaxAvg <- function(pedres=NULL, ped = NULL, start_year) {
 
 
 # Histogram of maximum average contribution of any given individual considering all years (2002-2022). Only the years from when an individual 
-# entered the pedigree and on were considered in the averaging since before that their contribution is 'NA' and NAs were ignored in the mean calculation. This is Figure S5B.
+# entered the pedigree and on were considered in the averaging since before that their contribution is 'NA' and NAs were ignored in the mean calculation. This is Figure S4D.
 max_avg = calcMaxAvg(pedres = pedres, ped = ped, start_year = 2002)
 
 #write.table(data.frame(SEED=pedres$sim[[1]]$SEED, MAX_AVERAGE_P_FOCAL_ANC = max_avg), file='/home/tyler/Dropbox/research/jay/mosaic/simulations/pedigree_sims/results/cr_sim_analysis_max_average_p_focal_anc.txt', col.names=TRUE, row.names=FALSE, quote=FALSE, sep="\t")
+# uncomment code below to use written maximum average contribution values
+#max_avg = (read.table('/home/tyler/Dropbox/research/jay/mosaic/simulations/pedigree_sims/results/cr_sim_analysis_max_average_p_focal_anc.txt',head=TRUE))$MAX_AVERAGE_P_FOCAL_ANC 
 
 rlsk_max_avg = mean(sapply(which(pedres$year %in% 2003:2022 == TRUE),function(x,dat){dat$obs[[x]]$P_ANC_FOCAL[which(dat$obs[[x]]$ID == "RLS-K")]}, dat=pedres),na.rm=TRUE)
 rlsk_max_avg.p = length(which(max_avg >= rlsk_max_avg))/length(max_avg)
@@ -6472,15 +6571,21 @@ wsak_max_avg = mean(sapply(which(pedres$year %in% 2008:2022 == TRUE),function(x,
 wsak_max_avg.p = length(which(max_avg >= wsak_max_avg))/length(max_avg)
 xmax = 0.18 # max(max_avg) = 0.1668423
 xmin = 0.02 # min(max_avg) = 0.0448871
-#png(file='/home/tyler/Dropbox/research/jay/mosaic/figures/simulation/simulation_max_avg_pfocalanc_allyears_histogram.png', width=7, height=7, units='in', res=300)
-hist(max_avg, xlab="Maximum average proportion of ancestor contribution", ylab="Density", main="", freq=FALSE, breaks=40, xlim=c(xmin,xmax),xaxt="n", cex.axis=1.3, cex.lab=1.3)
-axis(side=1, at=seq(from=xmin, to=xmax, by=0.02), cex.axis=1.3)
+
+#png(file='/home/tyler/Dropbox/research/jay/mosaic/figures/simulation/simulation_max_avg_pfocalanc_allyears_histogram_improved_labels.png', width=6, height=6, units='in', res=300)
+x11(width=6, heigh=6)
+
+par(mgp=c(2.7,1,0),mar=c(5, 3.85, 0, 3))
+hist(max_avg, xlab="Maximum average proportion", ylab="Density", main="", freq=FALSE, breaks=40, xlim=c(xmin,xmax),xaxt="n", cex.axis=1.4, cex.lab=1.5, las=1)
+mtext(side=1,text="of ancestor contribution", padj=4.5, cex=1.5) # breaks up x-axis label
+axis(side=1, at=seq(from=xmin, to=xmax, by=0.02), cex.axis=1.4)
 max.avg.dense <- density(max_avg, bw=0.003)
-lines(max.avg.dense, col=alpha("blue",0.5), lwd=1.5)
-lines(x=c(rlsk_max_avg,rlsk_max_avg), y=c(0,8), col="red3", lwd=2)
+lines(max.avg.dense, col=alpha("blue",0.5), lwd=2.5)
+lines(x=c(rlsk_max_avg,rlsk_max_avg), y=c(0,8), col="red3", lwd=2.5)
 text(x=rlsk_max_avg-0.005, y=9, label=substitute(paste("RLS-K ", italic(p), " = ", x, sep=""), list(x=rlsk_max_avg.p)), cex=1.3, adj=0)
-lines(x=c(wsak_max_avg,wsak_max_avg), y=c(0,15), col="red3", lwd=2)
+lines(x=c(wsak_max_avg,wsak_max_avg), y=c(0,15), col="red3", lwd=2.5)
 text(x=wsak_max_avg-0.005, y=16, label=substitute(paste("WSA-K ", italic(p), " = ", x, sep=""), list(x=wsak_max_avg.p)), cex=1.3, adj=0)
+
 #dev.off()
 
 max(max_avg) # maximum average contribution of a single ancestral lineage to the population
@@ -7507,6 +7612,13 @@ skew = function(x) {
 	return(m3/xsd3)
 }
 
+rescale <- function(x=NULL, min_orig=0, max_orig=1, min_new=0, max_new=1) {
+	# rescale values of vector x to range (min_new, max_new)
+	if (max_orig - min_orig == 0) return(rep(NA,length(x)))
+	scaling_factor = (max_new-min_new)/(max_orig-min_orig)
+	return(scaling_factor * (x - max_orig) + max_new)
+}
+
 # read in list of ancestors
 
 anc.df = read.table('/home/tyler/Dropbox/research/jay/mosaic/simulations/pedigree_sims/inputs/cr_ancestors_20240602.tsv',head=FALSE)
@@ -7651,9 +7763,11 @@ for (mod in models) {
 # variance in ancestral genetic contributions is 0.25. The gendat$anceestor_var_norm values normalize all of the variances to be
 # in the range [0,0.25]. This normalization is not very useful though, and so for the purpose of comparing variance and skew of 
 # genetic contributions among different demographic scenarios (where the maximum number of ancestors and genetic variances are different)
-# subsampling individuals to the same number of ancestors seems best. In practice, this means that ancestors will only ever be subsampled
+# subsampling individuals to the same number of ancestors seems best. In practice, this means that ancestors will only be subsampled
 # from the scenario involving translocations because the number of ancestors is being downsampled to the number of residents. I expect that
-# this subsampling will increase the genetic contribution variance for the scenario involving translocations.
+# this subsampling will increase the genetic contribution variance for the scenario involving translocations. With this subsampling
+# approach when reproductive variance is extremeley high (most individuals make zero contribution) it becomes likely to subsample all zero
+# contributions which makes the variance zero, hence introducing a downward bias in the variance.
 
 # Note about gendat$anceestor_var_norm. Since the range for the variance depends on the number of ancestors normalize all
 # variances to be on the same scale. The maximum variance is achieved when 1 ancestor acounts for all (proportion = 1) 
@@ -7717,7 +7831,7 @@ lines(x=size_observed$YEAR, y=size_observed$N_TOTAL, col=obscol, lwd=3)
 # convert -loop 0 -delay 50 $(for i in {1..59}; do echo "sim_pop${i}.png"; done) -delay 400 sim_pop60.png simulated_pop_size.gif
 
 
-# plot population size over time using boxes and whiskers
+# plot population size over time using boxes and whiskers (Figure S3A - top panel)
 
 x11(width=15,height=6)
 #png(file='/home/tyler/Dropbox/research/jay/mosaic/simulations/pop_sims/plots/simulated_pop_size.png',width=15,height=6, units='in',res=300)
@@ -7786,7 +7900,7 @@ legend(x=68, y=-2.3, "Size change, with translocations", fill=modcol[3], bty='n'
 #dev.off()
 
 
-# plot ancestor genetic contibution variance for subset of 23 random ancestors using boxes and whiskers
+# plot ancestor genetic contibution variance for subset of 23 random ancestors using boxes and whiskers (Figure S3A - bottom panel)
 
 range(gendat$ancestor_sub_var, na.rm=TRUE)
 #[1] 0.00000000 0.04347826
@@ -7816,13 +7930,14 @@ legend(x=68, y=-2.3, "Size change, with translocations", fill=modcol[3], bty='n'
 #dev.off()
 
 
-# plot ancestor genetic contribution variance for all ancestors over time for the size change with translocations scenario
+# plot ancestor genetic contribution variance for all ancestors over time for the size change with translocations scenario (Figure S3B)
 
 range(gendat$ancestor_var[which(gendat$model == "grow_wtrans")],na.rm=TRUE)
 #[1] 0.00000000 0.03703704
 max(obs.df$ancestor_var)
 #[1] 0.002144785
 
+# Figure S3B - top panel inset
 x11(width=15,height=6)
 #png(file='/home/tyler/Dropbox/research/jay/mosaic/simulations/pop_sims/plots/all_ancestors_genetic_variance_grow_wtrans_model.png',width=15,height=6, units='in',res=300)
 time_boxplots(df=gendat, res_idx=5, year_idx=3, model_idx=1, models="grow_wtrans", ylimits=c(0,0.04), boxcol="#04C994", ylabel="Variance of relative ancestor contribution", stepsize=1)
@@ -7830,8 +7945,7 @@ rect(xleft=1:nrow(obs.df)-0.31, xright=1:nrow(obs.df)+0.31, ytop=genetic_quantil
 #points(x=1:nrow(obs.df), y=obs.df$ancestor_var, col=obscol, pch=19, cex=1.2)
 #dev.off()
 
-# y-axis zoom for better resolution
-
+# y-axis zoom for better resolution (Figure S3B - top panel main)
 x11(width=15,height=6)
 #png(file='/home/tyler/Dropbox/research/jay/mosaic/simulations/pop_sims/plots/all_ancestors_genetic_variance_grow_wtrans_model_zoom.png',width=15,height=6, units='in',res=300)
 time_boxplots(df=gendat, res_idx=5, year_idx=3, model_idx=1, models="grow_wtrans", ylimits=c(0,0.004), boxcol="#04C994", ylabel="Variance of relative ancestor contribution", stepsize=1)
@@ -7840,7 +7954,7 @@ points(x=1:nrow(obs.df), y=obs.df$ancestor_var, col=obscol, pch=19, cex=1.3)
 #dev.off()
 
 
-# plot ancestor genetic contribution skew for all ancestors over time for the size change with translocations scenario
+# plot ancestor genetic contribution skew for all ancestors over time for the size change with translocations scenario (Figure S3B - bottom panel)
 # note that the observed skew is not displayed for years 2002-2003 because the genetic variance was zero (skew is undefined)
 
 range(gendat$ancestor_skew[which(gendat$model == "grow_wtrans")],na.rm=TRUE)
@@ -7969,6 +8083,57 @@ trans_compare$year[which(trans_compare$padj <= sig_cutoff)]
 # [1] 2003 2004 2006 2008 2009 2010 2011 2012 2013 2014 2015 2016 2017 2018 2019
 #[16] 2020 2021 2022
 
+## Figures with census popopulation size, reproductive skew, and simulated reproductive skew for graphical abstract
+census.n = read.table('/home/tyler/Dropbox/research/jay/mosaic/monitoring_data/cr_census_population_size.tsv', head=TRUE) # read in census size
+abstract.df = obs.df[,c(1,3,4)]
+abstract.df$census_n = census.n$CENSUS_N
+# Note: can only compare observed and simulated skew on the same plot for simulated scenarios that involved translocations so that the sample sizes are the same.
+# Values calculated for subsets of simulated individuals are comparable, but these sample sizes are smaller than the observed sample sizes.
+abstract.df$const_notrans_skew = sapply(abstract.df$year, function(yr,df){mean(df$ancestor_sub_skew[which(df$year == yr & df$model == "const_notrans")], na.rm=TRUE)},df=gendat,USE.NAMES=FALSE)
+abstract.df$grow_notrans_skew = sapply(abstract.df$year, function(yr,df){mean(df$ancestor_sub_skew[which(df$year == yr & df$model == "grow_notrans")], na.rm=TRUE)},df=gendat,USE.NAMES=FALSE)
+abstract.df$grow_wtrans_skew = sapply(abstract.df$year, function(yr,df){mean(df$ancestor_sub_skew[which(df$year == yr & df$model == "grow_wtrans")], na.rm=TRUE)},df=gendat,USE.NAMES=FALSE)
+
+plot.bounds = c(0,max(abstract.df$census_n)+6)
+minskew=min(abstract.df$ancestor_skew,na.rm=TRUE)
+maxskew=max(abstract.df$ancestor_skew,na.rm=TRUE)
+# plot observed census size and reproductive
+
+# put observe census size and reproductive skew on the same scale for plotting
+abstract.df$ancestor_skew_scale = rescale(abstract.df$ancestor_skew, min_orig=min(abstract.df$ancestor_skew,na.rm=TRUE), max_orig=max(abstract.df$ancestor_skew, na.rm=TRUE),
+min_new=plot.bounds[1], max_new=plot.bounds[2])
+
+# plot observed population size and reproductive skew
+#png(file='/home/tyler/Dropbox/research/jay/mosaic/manuscript/current_biology/graphical_abstract/observed_n_and_reproductive_skew.png', width=12, height=7, units='in', res=300)
+#png(file='/home/tyler/Dropbox/research/jay/mosaic/manuscript/current_biology/graphical_abstract/observed_n_and_reproductive_skew_nobg.png', width=12, height=7, units='in', res=300, bg="transparent")
+par(mgp = c(3.75,1,0), mar=c(5, 6, 4, 6))
+plot(1,xlim=c(abstract.df$year[2], abstract.df$year[nrow(abstract.df)]),ylim=plot.bounds,xlab="Year",ylab="Population census size",main=NULL, xaxt='n', cex.axis=1.8, cex.lab=1.8, las=1)
+axis(side=1, at=abstract.df$year[2:nrow(abstract.df)], labels=abstract.df$year[2:nrow(abstract.df)], cex=1.8, cex.axis=1.8)
+axis(side=4, at=seq(from=plot.bounds[1],to=plot.bounds[2],by=(plot.bounds[2]-plot.bounds[1])/3), labels=sprintf("%.2f",seq(from=minskew, to=maxskew, by=(maxskew-minskew)/3)), 
+cex=1.8, cex.axis=1.8, las=1)
+mtext(text="Ancestral reproductive skew", side=4, cex=1.8, padj=4.5)
+lines(x=abstract.df$year[3:nrow(abstract.df)], y=abstract.df$ancestor_skew_scale[3:nrow(abstract.df)],type="l", lwd=8, col=alpha("palevioletred4",0.6))
+lines(x=abstract.df$year[2:nrow(abstract.df)], y=abstract.df$census_n[2:nrow(abstract.df)],type="l", lwd=8, col=alpha("black",0.6))
+#dev.off()
+
+# compare reproductive skew for the 2022 population
+
+skew.df = rbind(data.frame(skew = gendat$ancestor_sub_skew[which(gendat$model == "const_notrans" & gendat$year == 2022)], model="no_grow_trans"),
+data.frame(skew = gendat$ancestor_sub_skew[which(gendat$model == "grow_notrans" & gendat$year == 2022)], model="no_translocations"),
+data.frame(skew = gendat$ancestor_sub_skew[which(gendat$model == "grow_wtrans" & gendat$year == 2022)], model="with_translocations"))
+
+skew.df$model = factor(skew.df$model, levels=c("no_grow_trans", "no_translocations","with_translocations"))
+
+#png(file='/home/tyler/Dropbox/research/jay/mosaic/manuscript/current_biology/graphical_abstract/reproductive_skew_boxplots.png', width=3.2, height=6, units='in', res=300)
+#png(file='/home/tyler/Dropbox/research/jay/mosaic/manuscript/current_biology/graphical_abstract/reproductive_skew_boxplots_nobg.png', width=3.2, height=6, units='in', res=300, bg="transparent")
+
+par(mgp=c(2.5,1,0))
+boxplot(skew.df$skew ~ skew.df$model, notch=TRUE, xlab="Population growth", ylab="Ancestral reproductive skew",
+names=c("no","yes","yes"), cex.lab=1.4, cex.axis=1.4, col="palevioletred3",cex=1, pch=21, bg=alpha("palevioletred3",0.6),yaxt='n')
+axis(side=2, at=c(1,2,3,4),cex.axis=1.4, las=1)
+axis(side=3,at=c(1,2,3), labels=c("no","no","yes"), cex.axis=1.4)
+mtext(side=3, text="Translocations", cex=1.4, padj=-3)
+
+#dev.off()
 
 --- end R code ---
 
@@ -8027,3 +8192,96 @@ popsize
 --- end R code ---
 
 
+
+## ---------- VISUALIZE PEDIGREE  ---------- ##
+
+The following code was used to generate the pedigree image for the graphical abstract
+
+--- start R code ---
+
+library(pedtools)
+
+# read in data
+
+ped <- read.table('/home/tyler/Dropbox/research/jay/mosaic/simulations/pedigree_sims/inputs/cr_ped_20240602.tsv',head=TRUE)
+anc <- read.table('/home/tyler/Dropbox/research/jay/mosaic/simulations/pedigree_sims/inputs/cr_ancestors_20240602.tsv', head=FALSE)
+
+# add ID entries for missing parents of "I" (including true immigrant) individuals for which both parents were known
+ped = rbind(ped, data.frame(ID='S-RK', SIRE_ID = '*', DAM_ID = '*', SEX='MALE', COHORT = '*', COHORT_LAST = '*', POPULATION = '*')) # father of an individual banded as an adult with both known parents
+ped = rbind(ped, data.frame(ID='PS-GF', SIRE_ID = '*', DAM_ID = '*', SEX='MALE', COHORT = '*', COHORT_LAST = '*', POPULATION = '*')) # father of an individual banded as an adult with both known parents
+ped = rbind(ped, data.frame(ID='S-BK', SIRE_ID = '*', DAM_ID = '*', SEX='FEMALE', COHORT = '*', COHORT_LAST = '*', POPULATION = '*')) # mother of an individual banded as an adult with both known parents
+ped = rbind(ped, data.frame(ID='AF-SH', SIRE_ID = '*', DAM_ID = '*', SEX='FEMALE', COHORT = '*', COHORT_LAST = '*', POPULATION = '*')) # mother of an individual banded as an adult with both known parents
+ped = rbind(ped, data.frame(ID='BS-K', SIRE_ID = '*', DAM_ID = '*', SEX='FEMALE', COHORT = '*', COHORT_LAST = '*', POPULATION = '*')) # mother of an individual banded as an adult with both known parents
+ped = rbind(ped, data.frame(ID='PPS-F', SIRE_ID = '*', DAM_ID = '*', SEX='FEMALE', COHORT = '*', COHORT_LAST = '*', POPULATION = '*')) # mother of an immigrant with both known parents
+
+# the remaining missing ancestors were parents of CR founders and so are omitted because the CR founders are considered the furthest ancestors for the CR pedigree
+#ped = rbind(ped, data.frame(ID='LK-WS', SIRE_ID = '*', DAM_ID = '*', SEX='MALE', COHORT = '*', COHORT_LAST = '*', POPULATION = '*'))
+#ped = rbind(ped, data.frame(ID='-SAK', SIRE_ID = '*', DAM_ID = '*', SEX='MALE', COHORT = '*', COHORT_LAST = '*', POPULATION = '*'))
+#ped = rbind(ped, data.frame(ID='-KPS', SIRE_ID = '*', DAM_ID = '*', SEX='MALE', COHORT = '*', COHORT_LAST = '*', POPULATION = '*'))
+#ped = rbind(ped, data.frame(ID='-KAS', SIRE_ID = '*', DAM_ID = '*', SEX='MALE', COHORT = '*', COHORT_LAST = '*', POPULATION = '*'))
+#ped = rbind(ped, data.frame(ID='GK-RS', SIRE_ID = '*', DAM_ID = '*', SEX='MALE', COHORT = '*', COHORT_LAST = '*', POPULATION = '*'))
+#ped = rbind(ped, data.frame(ID='K-SAB', SIRE_ID = '*', DAM_ID = '*', SEX='MALE', COHORT = '*', COHORT_LAST = '*', POPULATION = '*'))
+#ped = rbind(ped, data.frame(ID='PK-BS', SIRE_ID = '*', DAM_ID = '*', SEX='FEMALE', COHORT = '*', COHORT_LAST = '*', POPULATION = '*'))
+#ped = rbind(ped, data.frame(ID='GK-BS', SIRE_ID = '*', DAM_ID = '*', SEX='FEMALE', COHORT = '*', COHORT_LAST = '*', POPULATION = '*'))
+#ped = rbind(ped, data.frame(ID='-KBS', SIRE_ID = '*', DAM_ID = '*', SEX='FEMALE', COHORT = '*', COHORT_LAST = '*', POPULATION = '*'))
+#ped = rbind(ped, data.frame(ID='WK-SR', SIRE_ID = '*', DAM_ID = '*', SEX='FEMALE', COHORT = '*', COHORT_LAST = '*', POPULATION = '*'))
+#ped = rbind(ped, data.frame(ID='-KOS', SIRE_ID = '*', DAM_ID = '*', SEX='FEMALE', COHORT = '*', COHORT_LAST = '*', POPULATION = '*'))
+
+# mask parents of CR ancestors and non-ancestors missing at least one parent (otherwise pedtools will complain about missing individuals that were external to the CR)
+for (i in 1:nrow(ped)) {
+        id = ped$ID[i]
+        idx = which(anc$V1 == id)
+        if ((length(idx) > 0 && (anc$V2[idx] == "TRANSLOCATED" || (anc$V2[idx] == "RESIDENT" && (ped$SIRE_ID[i] == '*' || ped$DAM_ID[i] == '*')))) ||
+        (length(idx) < 1 && (ped$SIRE_ID[i] == '*' || ped$DAM_ID[i] == '*'))) {
+                ped$SIRE_ID[i] = '*'
+                ped$DAM_ID[i] = '*'
+        }
+}
+
+# amend some information that is missing in the input pedigree and needed for plotting
+ped$SEX[which(ped$ID == "F-BHS")] = 'MALE' # male in the cumulative nesting data
+ped$SEX[which(ped$ID == "F-AHZ")] = 'MALE' # male in the cumulative nesting data
+ped$SEX[which(ped$ID == "GPZ-F")] = 'MALE' # male in the cumulative nesting data
+ped$SEX[which(ped$ID == "PF-SF")] = 'FEMALE' # mother in the cumulative nesting data
+ped$SEX[which(ped$ID == "BGZ-F")] = 'FEMALE' # mother in the cumulative nesting data
+
+
+# format pedigree for pedtools
+ped$SEX[which(ped$SEX == "MALE")] = 1
+ped$SEX[which(ped$SEX == "FEMALE")] = 2
+ped$SEX[which(ped$SEX == "*")] = 0
+ped$SEX = as.numeric(ped$SEX)
+
+ped$SIRE_ID[which(ped$SIRE_ID == '*')] = 0
+ped$DAM_ID[which(ped$DAM_ID == '*')] = 0
+
+# make ped object
+pedobj = ped(id=ped$ID, fid=ped$SIRE_ID, mid=ped$DAM_ID, sex=ped$SEX, validate=TRUE)
+
+# make ped object of descendants of the RLS-K and WSA-K breeding pair
+sub1 = commonDescendants(pedobj,id=c("RLS-K", "WSA-K"), inclusive=TRUE)
+sub1 = c("RLS-K","WSA-K",sub1)
+pedsub1 = ped[which(ped$ID %in% commonDescendants(pedobj,ids=c("RLS-K","WSA-K"),inclusive=TRUE) == TRUE),]
+
+# add parents until pedigree is complete
+all_ind = unique(c(pedsub1$SIRE_ID, pedsub1$DAM_ID))
+if ("0" %in% all_ind == TRUE) all_ind = all_ind[-which(all_ind == "0")]
+while(length(which(all_ind %in% pedsub1$ID == FALSE)) > 0) {
+        missid = all_ind[which(all_ind %in% pedsub1$ID == FALSE)]
+        pedsub1 = rbind(pedsub1,ped[which(ped$ID %in% missid == TRUE),])
+        all_ind = unique(c(pedsub1$SIRE_ID, pedsub1$DAM_ID))
+        if ("0" %in% all_ind == TRUE) all_ind = all_ind[-which(all_ind == "0")]
+}
+
+pedobj_sub1 = ped(id=pedsub1$ID, fid=pedsub1$SIRE_ID, mid=pedsub1$DAM_ID, sex=pedsub1$SEX, validate=TRUE)
+
+# plot pedigree of RLS-K+WSA-K descendants
+#png('/home/tyler/Dropbox/research/jay/mosaic/pedigree/pedigree_plots/rlsw_wsak_ped.png',width=7,height=7,unit='in',res=300)
+plot(pedobj_sub1,labs=NULL,aff=commonDescendants(pedobj_sub1, ids=c("RLS-K","WSA-K"),inclusive=TRUE), starred=c("RLS-K","WSA-K"))
+dev.off()
+
+#png('/home/tyler/Dropbox/research/jay/mosaic/pedigree/pedigree_plots/rlsw_wsak_ped_color.png',width=7,height=7,unit='in',res=300)
+plot(pedobj_sub1,labs=NULL,aff=commonDescendants(pedobj_sub1, ids=c("RLS-K","WSA-K"),inclusive=TRUE),fill="steelblue4")
+#dev.off()
+
+--- end R code ---
