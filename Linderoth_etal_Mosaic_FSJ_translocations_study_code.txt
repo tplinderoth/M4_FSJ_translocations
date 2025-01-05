@@ -7769,6 +7769,13 @@ for (mod in models) {
 # approach when reproductive variance is extremeley high (most individuals make zero contribution) it becomes likely to subsample all zero
 # contributions which makes the variance zero, hence introducing a downward bias in the variance.
 
+# There were no cases in which the variance for all ancestors was greater than zero and the variance for a subset was zero (see code below)
+# idicating that the problem of downward biasing the variance from subsampling mentioned above should not be an issue for comparing results 
+# among different models in this case.
+length(which(gendat$ancestor_sub_var == 0 & gendat$ancestor_var > 0))
+#[1] 0
+
+
 # Note about gendat$anceestor_var_norm. Since the range for the variance depends on the number of ancestors normalize all
 # variances to be on the same scale. The maximum variance is achieved when 1 ancestor acounts for all (proportion = 1) 
 # ancestry and all other ancestors account for zero ancestry (are zero). Thus, the maximum possible variance will decrease as 
